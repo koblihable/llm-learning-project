@@ -1,0 +1,33 @@
+website = Website('https://yle.fi')
+
+# Step 1: Create your prompts
+system_prompt = "you are a language teacher"
+user_prompt = f"Find all finnish verbs in the text and give me their list together with their translation into English - {website.text}"
+
+# Step 2: Make the messages list
+messages = [
+    {"role":"system","content":system_prompt},
+    {"role":"user","content":user_prompt}           
+] 
+
+# Step 3: Call OpenAI
+def list_of_verbs(url):
+    response = openai.chat.completions.create(
+        model = "gpt-4o-mini",
+        messages = messages
+    )
+    return response.choices[0].message.content
+
+# Step 4: print the result
+print(list_of_verbs('https://yle.fi'))
+
+# next steps
+# create a method that takes in
+# 	just one url 
+# 	a language into which the translation should be done
+# 		test websites in different languages, it is able to recognise finnish no problem
+# 	"verbs" could also be a variable and could be replace with other word classes, maybe even strings? - it is supposed to be a vocab builder
+# use all parametres to create the prompts
+# next step could be to oprionally override the model
+# revamp the output to show the languages as a header
+#
