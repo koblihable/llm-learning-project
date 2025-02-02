@@ -5,8 +5,18 @@ from bs4 import BeautifulSoup
 from IPython.display import Markdown, display
 from openai import OpenAI
 
+load_dotenv(override=True)
+api_key = os.getenv('OPENAI_API_KEY')
+openai = OpenAI()
 
-# A class to represent a Webpage
+# get the string for the website that we want to search and scrape
+website_str = input('what site whoud you like to search? ') #https://yle.fi/news
+##TODO what to do if the url is garbage
+
+# get the word class that the user wants to be listed
+word_class = input('What kind of word class would you like to list? Please select between "NOUNS", "VERBS" or "ADJECTIVES": ')
+#TODO if the input is anything else
+
 # Some websites need you to use proper headers when fetching them.
 # The headers identify us as best as can be done as real users rather than python code
 # To find a header - google the webpage, press ctrl+shift+i to enter developer tools
@@ -14,7 +24,6 @@ from openai import OpenAI
 #                   - reload the page to get some activity
 #                   - click on any resource to see details
 #                   - the header we are after is request header: user agent
-
 headers = {
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
 }
@@ -29,41 +38,28 @@ class Website:
         for irrelevant in soup.body(["script", "style", "img", "input"]):
             irrelevant.decompose()
         self.text = soup.body.get_text(separator="\n", strip=True)
-###########################
 
-load_dotenv(override=True)
-api_key = os.getenv('OPENAI_API_KEY')
-openai = OpenAI()
-website = Website('https://yle.fi')
+# instantiate the website
+website = Website(website_str)
 
-# Step 1: #Create your prompts
+#Create the prompts
 system_prompt = "you are a language teacher"
-user_prompt = f"Find all finnish verbs in the text and give me their list together with their translation into English - {website.text}"
+user_prompt = f"Find all finnish {word_class} in the text and give me their list together with their translation into English - {website.text}"
 
-# Step 2: Make the messages list
+# Make the messages list
 messages = [
     {"role":"system","content":system_prompt},
     {"role":"user","content":user_prompt}           
 ] 
 
-# Step 3: Call OpenAI
-def list_of_verbs(url):
+# Call OpenAI
+def list_of_words(url):
     response = openai.chat.completions.create(
         model = "gpt-4o-mini",
         messages = messages
     )
     return response.choices[0].message.content
 
-# Step 4: print the result
-print(list_of_verbs('https://yle.fi'))
+# print the result
+print(list_of_words(website_str))
 
-# next steps
-# create a method that takes in
-# 	just one url 
-# 	a language into which the translation should be done
-# 		test websites in different languages, it is able to recognise finnish no problem
-# 	"verbs" could also be a variable and could be replace with other word classes, maybe even strings? - it is supposed to be a vocab builder
-# use all parametres to create the prompts
-# next step could be to oprionally override the model
-# revamp the output to show the languages as a header
-#
