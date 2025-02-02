@@ -6,19 +6,22 @@ from IPython.display import Markdown, display
 from openai import OpenAI
 
 
-###BORROWED CODE FOR NOW###
-#
-
 # A class to represent a Webpage
-#
-# # Some websites need you to use proper headers when fetching them:
+# Some websites need you to use proper headers when fetching them.
+# The headers identify us as best as can be done as real users rather than python code
+# To find a header - google the webpage, press ctrl+shift+i to enter developer tools
+#                   - go to network tab
+#                   - reload the page to get some activity
+#                   - click on any resource to see details
+#                   - the header we are after is request header: user agent
+
 headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
 }
 
+# Create this Website object from the given url using the BeautifulSoup library
 class Website:
     def __init__(self, url):
-# Create this Website object from the given url using the BeautifulSoup library
         self.url = url
         response = requests.get(url, headers=headers)
         soup = BeautifulSoup(response.content, 'html.parser')

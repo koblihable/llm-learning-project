@@ -1,7 +1,11 @@
 Clone this repository to your projects folder
+
 Download anaconda from https://www.anaconda.com/download
+
 run `bash <.sh>` e.g. `bash Anaconda3-2024.10-1-Linux-x86_64.sh`
-run `conda env create -f environment.yml` #TODO - make more simple
+
+run `conda env create -f environment.yml` #TODO - make more simple, check alternatives
+
 run `conda activate llms`
 Create an OpenAI account if you don't have one by visiting: https://platform.openai.com/
 You can add your credit balance to OpenAI at Settings > Billing:
