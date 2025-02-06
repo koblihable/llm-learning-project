@@ -1,4 +1,3 @@
-
 import os
 import requests
 from dotenv import load_dotenv
@@ -69,7 +68,7 @@ def list_of_words(url):
         model=MODEL,
         messages=[
             {'role':'system','content':'you are a language teacher'},
-            {'role':'user','content':f'Find all finnish {word_class} in the text and give me their list together with their translation into English - {website.text}'}
+            {'role':'user','content':f'Find all {word_class} in the text and give me their list together with their translation into English - {website.text}'}
         ]
     )
     return response.choices[0].message.content
