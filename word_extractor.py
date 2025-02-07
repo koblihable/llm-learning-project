@@ -56,11 +56,12 @@ class Website:
         for irrelevant in soup.body(["script", "style", "img", "input"]):
             irrelevant.decompose()
         self.text = soup.body.get_text(separator="\n", strip=True)
+    def get_contents(self):
+        return self.text
 
 while confirm_url(website_str)=='NO':
     website_str = input('Please submit a valid url: ')
     result = confirm_url(website_str)
-website = Website(website_str)
 
 # create the api call
 def list_of_words(url):
@@ -68,7 +69,7 @@ def list_of_words(url):
         model=MODEL,
         messages=[
             {'role':'system','content':'you are a language teacher'},
-            {'role':'user','content':f'Find all {word_class} in the text and give me their list together with their translation into English - {website.text}'}
+            {'role':'user','content':f'Find all {word_class} in the text and give me their list together with their translation into English - {Website(website_str).get_contents()}'}
         ]
     )
     return response.choices[0].message.content
